@@ -2499,6 +2499,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		foreach ($order as $module) {
 			if (isset($modules[$module])) $sortedModules[$module] = $modules[$module];
 		}
+		$sortedModules = array_reverse($sortedModules, true);
 
 		// Loop in reverse order, meaning the translator with the highest priority goes first
 		$translators = array_reverse(self::get_translators(), true);
