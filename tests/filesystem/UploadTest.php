@@ -478,6 +478,93 @@ class UploadTest extends SapphireTest {
 		$file2->delete();
 	}
 
+	public function testReplaceFileWithLoadIntoFile() {
+		// create tmp file
+		$tmpFileName = 'UploadTest-testUpload';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+
+		// emulates the $_FILES array
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'text/plaintext',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'txt',
+			'error' => UPLOAD_ERR_OK,
+		);
+
+		// Make sure there are none here, otherwise they get renamed incorrectly for the test.
+		$this->deleteTestUploadFiles("/UploadTest-testUpload.*/");
+
+		$v = new UploadTest_Validator();
+		$v->setAllowedExtensions(array(''));
+
+		// test upload into default folder
+		$u = new Upload();
+		$u->setValidator($v);
+		$u->load($tmpFile);
+		$file = $u->getFile();
+
+		$this->assertEquals(
+			'UploadTest-testUpload',
+			$file->Name,
+			'File is uploaded without extension'
+		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file->getRelativePath(),
+			'File exists'
+		);
+
+		// replace=true
+		$u = new Upload();
+		$u->setValidator($v);
+		$u->setReplaceFile(true);
+		$u->loadIntoFile($tmpFile, new File());
+		$file2 = $u->getFile();
+		$this->assertEquals(
+			'UploadTest-testUpload',
+			$file2->Name,
+			'File does not receive new name'
+		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file2->getRelativePath(),
+			'File exists'
+		);
+		$this->assertEquals(
+			$file->ID,
+			$file2->ID,
+			'File database record is the same'
+		);
+
+		// replace=false
+		$u = new Upload();
+		$u->setValidator($v);
+		$u->setReplaceFile(false);
+		$u->loadIntoFile($tmpFile, new File());
+		$file3 = $u->getFile();
+		$this->assertEquals(
+			'UploadTest-testUpload-2',
+			$file3->Name,
+			'File does receive new name'
+		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file3->getRelativePath(),
+			'File exists'
+		);
+		$this->assertGreaterThan(
+			$file->ID,
+			$file2->ID,
+			'File database record is not the same'
+		);
+
+		$file->delete();
+		$file2->delete();
+		$file3->delete();
+	}
+
 }
 class UploadTest_Validator extends Upload_Validator implements TestOnly {
 
