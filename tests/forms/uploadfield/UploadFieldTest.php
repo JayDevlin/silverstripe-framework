@@ -60,7 +60,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertEmpty($response['errors']);
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertTrue($record->HasOneFile()->exists());
-		$this->assertEquals($record->HasOneFile()->Name, $tmpFileName);
+		$this->assertEquals($record->HasOneFile()->ID, $uploadedFile->ID);
 	}
 
 	/**
@@ -92,7 +92,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertEmpty($response['errors']);
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertTrue($record->HasOneExtendedFile()->exists());
-		$this->assertEquals($record->HasOneExtendedFile()->Name, $tmpFileName);
+		$this->assertEquals($record->HasOneExtendedFile()->ID, $uploadedFile->ID);
 	}
 
 	
