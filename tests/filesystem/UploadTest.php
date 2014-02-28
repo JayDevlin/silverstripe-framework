@@ -343,11 +343,11 @@ class UploadTest extends SapphireTest {
 			$file2->ID,
 			'File database record is not the same'
 		);
-		
+
 		$file->delete();
 		$file2->delete();
 	}
-	
+
 	public function testUploadFileWithAnUnderscoreAppendsNumber() {
 		// create tmp file
 		$tmpFileName = 'UploadTest_testUpload';
@@ -355,7 +355,7 @@ class UploadTest extends SapphireTest {
 		$tmpFileContent = '';
 		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
 		file_put_contents($tmpFilePath, $tmpFileContent);
-		
+
 		// emulates the $_FILES array
 		$tmpFile = array(
 			'name' => $tmpFileName,
@@ -365,10 +365,9 @@ class UploadTest extends SapphireTest {
 			'extension' => 'txt',
 			'error' => UPLOAD_ERR_OK,
 		);
-		
+
 		// Make sure there are none here, otherwise they get renamed incorrectly for the test.
 		$this->deleteTestUploadFiles("/UploadTest-testUpload.*/");
-		$this->deleteTestUploadFiles("/UploadTest_testUpload.*/");
 
 		$v = new UploadTest_Validator();
 		$v->setAllowedExtensions(array(''));
@@ -388,7 +387,7 @@ class UploadTest extends SapphireTest {
 			BASE_PATH . '/'  . $file->getRelativePath(),
 			'File exists'
 		);
-		
+
 		$u = new Upload();
 		$u->setValidator($v);
 		$u->load($tmpFile);
