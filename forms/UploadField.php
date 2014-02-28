@@ -998,11 +998,12 @@ class UploadField extends FileField {
 			}
 		}
 
-		//get all the existing files in the current folder
-		if ($this->getOverwriteWarning()) {
-			//add overwrite warning error message to the config object sent to Javascript
+		// add overwrite warning error message to the config object sent to Javascript
+		if ($this->getUpload()->getReplaceFile() && $this->getOverwriteWarning()) {
 			$config['errorMessages']['overwriteWarning'] =
 				_t('UploadField.OVERWRITEWARNING', 'File with the same name already exists');
+		} else {
+			$this->setOverwriteWarning(false);
 		}
 		
 		$mergedConfig = array_merge($config, $this->ufConfig);
