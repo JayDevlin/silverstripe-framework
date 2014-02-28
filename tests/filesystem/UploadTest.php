@@ -258,6 +258,10 @@ class UploadTest extends SapphireTest {
 			$file->Name,
 			'File has a name without a number because it\'s not a duplicate'
 		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file->getRelativePath(),
+			'File exists'
+		);
 		
 		$u = new Upload();
 		$u->load($tmpFile);
@@ -266,6 +270,15 @@ class UploadTest extends SapphireTest {
 			'UploadTest-testUpload2.tar.gz',
 			$file2->Name,
 			'File receives a number attached to the end before the extension'
+		);
+		$this->assertFileExists(
+			BASE_PATH . '/' . $file2->getRelativePath(),
+			'File exists'
+		);
+		$this->assertGreaterThan(
+			$file->ID,
+			$file2->ID,
+			'File database record is not the same'
 		);
 		
 		$file->delete();
@@ -307,6 +320,10 @@ class UploadTest extends SapphireTest {
 			$file->Name,
 			'File is uploaded without extension'
 		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file->getRelativePath(),
+			'File exists'
+		);
 		
 		$u = new Upload();
 		$u->setValidator($v);
@@ -316,6 +333,79 @@ class UploadTest extends SapphireTest {
 			'UploadTest-testUpload-2',
 			$file2->Name,
 			'File receives a number attached to the end'
+		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file2->getRelativePath(),
+			'File exists'
+		);
+		$this->assertGreaterThan(
+			$file->ID,
+			$file2->ID,
+			'File database record is not the same'
+		);
+		
+		$file->delete();
+		$file2->delete();
+	}
+	
+	public function testUploadFileWithAnUnderscoreAppendsNumber() {
+		// create tmp file
+		$tmpFileName = 'UploadTest_testUpload';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+		
+		// emulates the $_FILES array
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'text/plaintext',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'txt',
+			'error' => UPLOAD_ERR_OK,
+		);
+		
+		// Make sure there are none here, otherwise they get renamed incorrectly for the test.
+		$this->deleteTestUploadFiles("/UploadTest-testUpload.*/");
+		$this->deleteTestUploadFiles("/UploadTest_testUpload.*/");
+
+		$v = new UploadTest_Validator();
+		$v->setAllowedExtensions(array(''));
+
+		// test upload into default folder
+		$u = new Upload();
+		$u->setValidator($v);
+		$u->load($tmpFile);
+		$file = $u->getFile();
+
+		$this->assertEquals(
+			'UploadTest-testUpload',
+			$file->Name,
+			'File is uploaded without extension'
+		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file->getRelativePath(),
+			'File exists'
+		);
+		
+		$u = new Upload();
+		$u->setValidator($v);
+		$u->load($tmpFile);
+		$file2 = $u->getFile();
+		$this->assertEquals(
+			'UploadTest-testUpload-2',
+			$file2->Name,
+			'File receives a number attached to the end'
+		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file2->getRelativePath(),
+			'File exists'
+		);
+		$this->assertGreaterThan(
+			$file->ID,
+			$file2->ID,
+			'File database record is not the same'
 		);
 		
 		$file->delete();
@@ -357,6 +447,10 @@ class UploadTest extends SapphireTest {
 			$file->Name,
 			'File is uploaded without extension'
 		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file->getRelativePath(),
+			'File exists'
+		);
 		
 		$u = new Upload();
 		$u->setValidator($v);
@@ -367,6 +461,10 @@ class UploadTest extends SapphireTest {
 			'UploadTest-testUpload',
 			$file2->Name,
 			'File does not receive new name'
+		);
+		$this->assertFileExists(
+			BASE_PATH . '/'  . $file2->getRelativePath(),
+			'File exists'
 		);
 		$this->assertEquals(
 			$file->ID,
