@@ -264,6 +264,7 @@ class UploadTest extends SapphireTest {
 		);
 		
 		$u = new Upload();
+		$u->setReplaceFile(false);
 		$u->load($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
@@ -327,6 +328,7 @@ class UploadTest extends SapphireTest {
 		
 		$u = new Upload();
 		$u->setValidator($v);
+		$u->setReplaceFile(false);
 		$u->load($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
@@ -390,6 +392,7 @@ class UploadTest extends SapphireTest {
 
 		$u = new Upload();
 		$u->setValidator($v);
+		$u->setReplaceFile(false);
 		$u->load($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
