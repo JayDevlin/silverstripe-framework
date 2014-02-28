@@ -25,8 +25,9 @@ class UploadFieldTest extends FunctionalTest {
 		$tmpFileName = 'testUploadBasic.txt';
 		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
 		$this->assertFalse($response->isError());
-		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
-		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
+		$responseData = Convert::json2array($response->getBody());
+		$this->assertFileExists(ASSETS_PATH . '/UploadFieldTest/' . $responseData[0]['name']);
+		$uploadedFile = DataObject::get_by_id('File', (int)$responseData[0]['id']);
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 	}
 
@@ -45,8 +46,9 @@ class UploadFieldTest extends FunctionalTest {
 		$tmpFileName = 'testUploadHasOneRelation.txt';
 		$response = $this->mockFileUpload('HasOneFile', $tmpFileName);
 		$this->assertFalse($response->isError());
-		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
-		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
+		$responseData = Convert::json2array($response->getBody());
+		$this->assertFileExists(ASSETS_PATH . '/UploadFieldTest/' . $responseData[0]['name']);
+		$uploadedFile = DataObject::get_by_id('File', (int)$responseData[0]['id']);
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		// Secondly, ensure that simply uploading an object does not save the file against the relation
@@ -76,8 +78,9 @@ class UploadFieldTest extends FunctionalTest {
 		$tmpFileName = 'testUploadHasOneRelationWithExtendedFile.txt';
 		$response = $this->mockFileUpload('HasOneExtendedFile', $tmpFileName);
 		$this->assertFalse($response->isError());
-		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
-		$uploadedFile = DataObject::get_one('UploadFieldTest_ExtendedFile', sprintf('"Name" = \'%s\'', $tmpFileName));
+		$responseData = Convert::json2array($response->getBody());
+		$this->assertFileExists(ASSETS_PATH . '/UploadFieldTest/' . $responseData[0]['name']);
+		$uploadedFile = DataObject::get_by_id('UploadFieldTest_ExtendedFile', (int)$responseData[0]['id']);
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		// Test that the record isn't written to automatically
@@ -105,8 +108,9 @@ class UploadFieldTest extends FunctionalTest {
 		$tmpFileName = 'testUploadHasManyRelation.txt';
 		$response = $this->mockFileUpload('HasManyFiles', $tmpFileName);
 		$this->assertFalse($response->isError());
-		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
-		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
+		$responseData = Convert::json2array($response->getBody());
+		$this->assertFileExists(ASSETS_PATH . '/UploadFieldTest/' . $responseData[0]['name']);
+		$uploadedFile = DataObject::get_by_id('File', (int)$responseData[0]['id']);
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		// Test that the record isn't written to automatically
@@ -134,8 +138,9 @@ class UploadFieldTest extends FunctionalTest {
 		$tmpFileName = 'testUploadManyManyRelation.txt';
 		$response = $this->mockFileUpload('ManyManyFiles', $tmpFileName);
 		$this->assertFalse($response->isError());
-		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
-		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
+		$responseData = Convert::json2array($response->getBody());
+		$this->assertFileExists(ASSETS_PATH . '/UploadFieldTest/' . $responseData[0]['name']);
+		$uploadedFile = DataObject::get_by_id('File', (int)$responseData[0]['id']);
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		// Test that the record isn't written to automatically
