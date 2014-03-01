@@ -268,7 +268,7 @@ class UploadTest extends SapphireTest {
 		$u->load($tmpFile);
 		$file2 = $u->getFile();
 		$this->assertEquals(
-			'UploadTest-testUpload2.tar.gz',
+			'UploadTest-testUpload-2.tar.gz',
 			$file2->Name,
 			'File receives a number attached to the end before the extension'
 		);
@@ -556,7 +556,7 @@ class UploadTest extends SapphireTest {
 		);
 		$this->assertGreaterThan(
 			$file->ID,
-			$file2->ID,
+			$file3->ID,
 			'File database record is not the same'
 		);
 
