@@ -23,9 +23,15 @@ window.tmpl.cache['ss-uploadfield-uploadtemplate'] = tmpl(
 					'<div class="ss-uploadfield-item-cancel cancel">' +
 						'<button class="icon icon-16" data-icon="minus-circle" title="' + ss.i18n._t('UploadField.CANCELREMOVE', 'Cancel/Remove') + '">' + ss.i18n._t('UploadField.CANCELREMOVE', 'Cancel/Remove') + '</button>' +
 					'</div>' +
-					'<div class="ss-uploadfield-item-overwrite hide ">'+
-						'<button data-icon="drive-upload" class="ss-uploadfield-item-overwrite-warning" title="' + ss.i18n._t('UploadField.OVERWRITE', 'Overwrite') + '">' + ss.i18n._t('UploadField.OVERWRITE', 'Overwrite') + '</button>' +
-					'</div>' +
+					'{% if (o.options.showOverwriteButton) { %}' +
+						'<div class="ss-uploadfield-item-overwrite hide ">'+
+							'<button data-icon="drive-upload" class="ss-uploadfield-item-overwrite ss-uploadfield-item-upload-action" title="' + ss.i18n._t('UploadField.OVERWRITE', 'Overwrite') + '">' + ss.i18n._t('UploadField.OVERWRITE', 'Overwrite') + '</button>' +
+						'</div>' +
+					'{% } else { %}' +
+						'<div class="ss-uploadfield-item-rename hide ">'+
+							'<button data-icon="drive-upload" class="ss-uploadfield-item-rename ss-uploadfield-item-upload-action" title="' + ss.i18n._t('UploadField.RENAME', 'Rename') + '">' + ss.i18n._t('UploadField.RENAME', 'Rename') + '</button>' +
+						'</div>' +
+					'{% } %}' +
 				'</div>' +
 			'</div>' +
 		'</li>' + 

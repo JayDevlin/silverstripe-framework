@@ -71,10 +71,15 @@
 								.text(config.errorMessages.overwriteWarning)
 								.addClass('ui-state-warning-text');
 							data.context.find('.ss-uploadfield-item-progress').hide();
-							data.context.find('.ss-uploadfield-item-overwrite').show();
-							data.context.find('.ss-uploadfield-item-overwrite-warning').on('click', function(e){
+							if (config.showOverwriteButton) {
+								data.context.find('.ss-uploadfield-item-overwrite').show();
+							} else {
+								data.context.find('.ss-uploadfield-item-rename').show();
+							}
+							data.context.find('.ss-uploadfield-item-upload-action').on('click', function(e){
 								data.context.find('.ss-uploadfield-item-progress').show();
 								data.context.find('.ss-uploadfield-item-overwrite').hide();
+								data.context.find('.ss-uploadfield-item-rename').hide();
 								data.context.find('.ss-uploadfield-item-status')
 									.removeClass('ui-state-warning-text');
 								//upload only if the "overwrite" button is clicked
