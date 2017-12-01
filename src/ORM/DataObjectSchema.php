@@ -121,7 +121,7 @@ class DataObjectSchema
     public function tableName($class)
     {
         $tables = $this->getTableNames();
-        $class = ClassInfo::class_name($class);
+        $class = $this->getClassName($class);
         if (isset($tables[$class])) {
             return $tables[$class];
         }
@@ -138,7 +138,7 @@ class DataObjectSchema
      */
     public function baseDataClass($class)
     {
-        $class = ClassInfo::class_name($class);
+        $class = $this->getClassName($class);
         $current = $class;
         while ($next = get_parent_class($current)) {
             if ($next === DataObject::class) {
@@ -187,7 +187,7 @@ class DataObjectSchema
      */
     public function fieldSpecs($classOrInstance, $options = 0)
     {
-        $class = ClassInfo::class_name($classOrInstance);
+        $class = $this->getClassName($classOrInstance);
 
         // Validate options
         if (!is_int($options)) {
@@ -336,7 +336,7 @@ class DataObjectSchema
      */
     public function databaseFields($class, $aggregated = true)
     {
-        $class = ClassInfo::class_name($class);
+        $class = $this->getClassName($class);
         if ($class === DataObject::class) {
             return [];
         }
@@ -374,7 +374,7 @@ class DataObjectSchema
      */
     public function databaseIndexes($class, $aggregated = true)
     {
-        $class = ClassInfo::class_name($class);
+        $class = $this->getClassName($class);
         if ($class === DataObject::class) {
             return [];
         }
@@ -413,7 +413,7 @@ class DataObjectSchema
      */
     public function compositeFields($class, $aggregated = true)
     {
-        $class = ClassInfo::class_name($class);
+        $class = $this->getClassName($class);
         if ($class === DataObject::class) {
             return [];
         }
@@ -628,8 +628,7 @@ class DataObjectSchema
      */
     public function classForField($candidateClass, $fieldName)
     {
-        // normalise class name
-        $candidateClass = ClassInfo::class_name($candidateClass);
+        $candidateClass = $this->getClassName($candidateClass);
         if ($candidateClass === DataObject::class) {
             return null;
         }
@@ -1129,4 +1128,14 @@ class DataObjectSchema
             );
         }
     }
+
+    /**
+     * @param string|DataObject $nameOrObject
+     * @return string
+     */
+    protected function getClassName($nameOrObject)
+    {
+        return (string) $nameOrObject;
+    }
+
 }
