@@ -284,7 +284,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public static function getSchema()
     {
-        return Injector::inst()->get(DataObjectSchema::class);
+        return Injector::inst()->get(CachedDataObjectSchema::class);
     }
 
     /**
