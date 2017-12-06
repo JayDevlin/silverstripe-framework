@@ -212,21 +212,25 @@ class ClassInfo
      */
     public static function class_name($nameOrObject)
     {
-        if (is_object($nameOrObject)) {
-            return get_class($nameOrObject);
+        $key = @(string) $nameOrObject;
+        if (empty($key)) {
+            $key = get_class($nameOrObject);
         }
 
-        $key = strtolower($nameOrObject);
         if (!isset(static::$_cache_class_names[$key])) {
-            // Get manifest name
-            $name = ClassLoader::inst()->getManifest()->getItemName($nameOrObject);
+            if (is_object($nameOrObject)) {
+                static::$_cache_class_names[$key] = $key;
+            } else {
+                // Get manifest name
+                $name = ClassLoader::inst()->getManifest()->getItemName($nameOrObject);
 
-            // Use reflection for non-manifest classes
-            if (!$name) {
-                $reflection = new ReflectionClass($nameOrObject);
-                $name = $reflection->getName();
+                // Use reflection for non-manifest classes
+                if (!$name) {
+                    $reflection = new ReflectionClass($nameOrObject);
+                    $name = $reflection->getName();
+                }
+                static::$_cache_class_names[$key] = $name;
             }
-            static::$_cache_class_names[$key] = $name;
         }
 
         return static::$_cache_class_names[$key];
